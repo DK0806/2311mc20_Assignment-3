@@ -1,0 +1,63 @@
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+class BST:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, node, value):
+        if node is None:
+            return Node(value)
+        else:
+            if value < node.value:
+                node.left = self.insert(node.left, value)
+            else:
+                node.right = self.insert(node.right, value)
+        return node
+
+    def findLCA(self, root, n1, n2):
+        while root:
+            # If both n1 and n2 are smaller than root, then LCA lies in left
+            if root.value > n1 and root.value > n2:
+                root = root.left
+            # If both n1 and n2 are greater than root, then LCA lies in right
+            elif root.value < n1 and root.value < n2:
+                root = root.right
+            else:
+                # We have found the LCA
+                return root
+        return None
+
+# Helper function to create a BST and find LCA
+def main():
+    bst = BST()
+    elements = [20, 8, 22, 4, 12, 10, 14]
+    for elem in elements:
+        bst.root = bst.insert(bst.root, elem)
+    
+    n1 = 10; n2 = 14
+    lca = bst.findLCA(bst.root, n1, n2)
+    if lca:
+        print(f"LCA of {n1} and {n2} is {lca.value}")
+    else:
+        print("LCA not found")
+
+    n1 = 14; n2 = 8
+    lca = bst.findLCA(bst.root, n1, n2)
+    if lca:
+        print(f"LCA of {n1} and {n2} is {lca.value}")
+    else:
+        print("LCA not found")
+
+    n1 = 10; n2 = 22
+    lca = bst.findLCA(bst.root, n1, n2)
+    if lca:
+        print(f"LCA of {n1} and {n2} is {lca.value}")
+    else:
+        print("LCA not found")
+
+if __name__ == "__main__":
+    main()

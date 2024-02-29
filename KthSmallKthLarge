@@ -1,0 +1,60 @@
+class Node:
+    def __init__(self, key):
+        self.left = None
+        self.right = None
+        self.val = key
+
+class BinarySearchTree:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, root, key):
+        if root is None:
+            return Node(key)
+        else:
+            if root.val < key:
+                root.right = self.insert(root.right, key)
+            else:
+                root.left = self.insert(root.left, key)
+        return root
+
+    def inOrderTraversal(self, root, elements):
+        if root:
+            self.inOrderTraversal(root.left, elements)
+            elements.append(root.val)
+            self.inOrderTraversal(root.right, elements)
+
+    def kthSmallest(self, k):
+        elements = []
+        self.inOrderTraversal(self.root, elements)
+        if k <= 0 or k > len(elements):
+            return None
+        return elements[k-1]
+
+    def kthLargest(self, k):
+        elements = []
+        self.inOrderTraversal(self.root, elements)
+        if k <= 0 or k > len(elements):
+            return None
+        return elements[-k]
+
+def main():
+    bst = BinarySearchTree()
+    n = int(input("Enter the number of nodes: "))
+    if n > 20:
+        print("Invalid input")
+        return
+    
+    print("Enter the values of the nodes:")
+    for _ in range(n):
+        node_value = int(input())
+        bst.root = bst.insert(bst.root, node_value)
+    
+    k_smallest = int(input("Enter k for the kth smallest element: "))
+    k_largest = int(input("Enter k for the kth largest element: "))
+
+    print(f"{k_smallest}th smallest element is: {bst.kthSmallest(k_smallest)}")
+    print(f"{k_largest}th largest element is: {bst.kthLargest(k_largest)}")
+
+if __name__ == "__main__":
+    main()

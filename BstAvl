@@ -1,0 +1,91 @@
+class Node:
+    def __init__(self, key):
+        self.left = None
+        self.righ = None
+        self.valu = key
+        self.heig = 1
+
+class AVL:
+    def __init__(self):
+        self.root = None
+
+    def getH(self, node):
+        if not node:
+            return 0
+        return node.heig
+
+    def getB(self, node):
+        if not node:
+            return 0
+        return self.getH(node.left) - self.getH(node.righ)
+
+    def rotR(self, y):
+        x = y.left
+        T2 = x.righ
+        x.righ = y
+        y.left = T2
+        y.heig = 1 + max(self.getH(y.left), self.getH(y.righ))
+        x.heig = 1 + max(self.getH(x.left), self.getH(x.righ))
+        return x
+
+    def rotL(self, x):
+        y = x.righ
+        T2 = y.left
+        y.left = x
+        x.righ = T2
+        x.heig = 1 + max(self.getH(x.left), self.getH(x.righ))
+        y.heig = 1 + max(self.getH(y.left), self.getH(y.righ))
+        return y
+
+    def insr(self, node, key):
+        if not node:
+            return Node(key)
+        elif key < node.valu:
+            node.left = self.insr(node.left, key)
+        else:
+            node.righ = self.insr(node.righ, key)
+
+        node.heig = 1 + max(self.getH(node.left), self.getH(node.righ))
+
+        bal = self.getB(node)
+
+        if bal > 1 and key < node.left.valu:
+            return self.rotR(node)
+
+        if bal < -1 and key > node.righ.valu:
+            return self.rotL(node)
+
+        if bal > 1 and key > node.left.valu:
+            node.left = self.rotL(node.left)
+            return self.rotR(node)
+
+        if bal < -1 and key < node.righ.valu:
+            node.righ = self.rotR(node.righ)
+            return self.rotL(node)
+
+        return node
+
+    def inOr(self, node, elem=[]):
+        if node:
+            self.inOr(node.left, elem)
+            elem.append(node.valu)
+            self.inOr(node.righ, elem)
+        return elem
+
+def main():
+    avlt = AVL()
+    num = int(input("Enter the number of nodes: "))
+    if num > 20:
+        print("Invalid input")
+        return
+    
+    print("Enter the values of the nodes:")
+    for _ in range(num):
+        val = int(input())
+        avlt.root = avlt.insr(avlt.root, val)
+    
+    elem = avlt.inOr(avlt.root)
+    print("In-order traversal of the AVL tree:", elem)
+
+if __name__ == "__main__":
+    main()
